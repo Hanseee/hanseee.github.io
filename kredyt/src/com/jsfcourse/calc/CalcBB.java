@@ -1,6 +1,7 @@
 package com.jsfcourse.calc;
 
 import javax.inject.Inject;
+import java.io.Serializable;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
