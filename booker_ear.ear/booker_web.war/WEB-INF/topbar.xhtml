@@ -1,0 +1,75 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <div class="layout-topbar">
+        <a href="#" id="topbar-menu-button">
+            <i class="pi pi-angle-left arrow"/>
+            <i class="pi pi-angle-up mobile"/>
+        </a>
+	<div class="search-input">
+            <h:form>
+                <i class="pi pi-search icon-search"/>
+                <p:inputText/>
+            </h:form>
+        </div>
+        
+        <h:link outcome="/mainpage" styleClass="logo-container">
+            <p:graphicImage name="images/Logo White.png" library="ecuador-layout" style="width: 120px;"/>
+        </h:link>
+	
+        <a id="topbar-profile-menu-button" href="#">
+            <h:outputText rendered="#{remoteClient.details.username == null}" style="vertical-align: bottom;" value="Użytkownik niezalogowany" />
+            <h:outputText rendered="#{remoteClient.details.username != null}" style="vertical-align: bottom;" value="#{remoteClient.details.username}" />
+            <i class="pi pi-caret-down"/>
+        </a>
+	
+        <ul id="topbar-usermenu" class="fadeInDown animated">
+            <li>
+                	<h:outputLink value="register.xhtml" rendered="#{remoteClient.details.username == null}"> 
+                    <i class="pi pi-fw pi-user"/>
+                    <h:outputText style="vertical-align: bottom;" value="Rejestracja" class="topbar-item-name"/>
+                    </h:outputLink>
+                    
+                    <h:outputLink value="expcalendar.xhtml" rendered="#{remoteClient.details.username != null}"> 
+                    <i class="pi pi-fw pi-calendar"/>
+                    <h:outputText style="vertical-align: bottom;" value="Nowa rezerwacja" class="topbar-item-name"/>
+                    </h:outputLink>
+            </li>
+            <li>
+                	<h:outputLink value="about.xhtml" rendered="#{remoteClient.details.username == null}"> 
+                    <i class="pi pi-fw pi-calendar"/>
+                    <h:outputText style="vertical-align: bottom;" value="Strona informacyjna" class="topbar-item-name"/>
+                    </h:outputLink>
+                    
+                    <h:outputLink value="about.xhtml" rendered="#{remoteClient.details.username != null}"> 
+                    <i class="pi pi-fw pi-info-circle"/>
+                    <h:outputText style="vertical-align: bottom;" value="Strona informacyjna" class="topbar-item-name"/>
+                	</h:outputLink>
+            </li>
+            <li>	
+            
+            		<h:form>
+                   	<h:commandLink action="#{loginBB.goToLogin()}" rendered="#{remoteClient.details.username == null}">  
+                    <i class="pi pi-fw pi-user"/>
+                    <h:outputText style="vertical-align: bottom;" value="Zaloguj" class="topbar-item-name"/>
+                    </h:commandLink>
+                	
+              
+                	
+                   	<h:commandLink action="#{loginBB.doLogout()}" rendered="#{remoteClient.details.username != null}"> 
+                    <i class="pi pi-fw pi-sign-in"/>
+                    <h:outputText style="vertical-align: bottom" value="Wyloguj" class="topbar-item-name"/>
+                	</h:commandLink></h:form> 
+                	
+            </li>
+        </ul>
+        <a href="#" id="right-panel-button">
+            <i class="pi pi-calendar"/>
+        </a>
+        
+    </div>
+
+</ui:composition>

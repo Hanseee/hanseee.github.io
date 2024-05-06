@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<f:facet name="first">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+	</f:facet>
+	<title>Booker - rejestracja</title>
+</h:head>
+
+<h:body styleClass="login-body">
+	<div class="login-topbar">
+	</div>
+	<div class="login-image">
+		<div class="login-panel" style="outline: 2px solid orange; height: 650px; top: 20%;">
+			<p:graphicImage name="images/bookerlipton.png" library="ecuador-layout"/>
+			<h:form>
+				<div class="col-12">
+					<div class="input-wrapper">
+						<p:inputText placeholder="Nazwa użytkownika" value="#{loginBB.login}"/>
+					</div>
+				</div>
+				<div class="col-12">
+					<div class="input-wrapper">
+						<p:inputText placeholder="Email" value="#{loginBB.email}" />
+					</div>
+				</div>
+				<div class="col-12">
+					<div class="input-wrapper">
+						<p:password placeholder="Hasło" value="#{loginBB.pass}"
+							style="width: 100%; margin: 6px 0;" />
+					</div>
+				</div>
+				<div class="col-12">
+					<div class="input-wrapper">
+						<p:password placeholder="Potwierdź hasło" value="#{loginBB.pass2}"
+							style="width: 100%; margin: 6px 0;" />
+					</div>
+				</div>
+				<div class="col-12">
+					<div class="input-wrapper">
+						<h5>Lokalizacja</h5>
+						<p:selectOneMenu value="#{loginBB.siteid}">
+							<f:selectItem itemLabel="Wybierz" itemValue="0" />
+							<f:selectItem itemLabel="Fabryka Katowice" itemValue="1" />
+							<f:selectItem itemLabel="Centrum Usług Wspólnych" itemValue="2" />
+							<f:selectItem itemLabel="Centrala Warszawa" itemValue="3" />
+						</p:selectOneMenu>
+					</div>
+				</div><div class="separator"></div>
+				<div class="checkbox-container-center">
+					<p:commandButton type="submit" value="Zarejestruj"
+						action="#{loginBB.doRegister()}" update="msg"
+						styleClass="ui-priority-primary" />
+					<h:messages id="msg" />
+				</div>
+			</h:form>
+		</div>
+	</div>
+
+	<h:outputStylesheet name="css/primeicons.css" library="ecuador-layout" />
+	<h:outputStylesheet name="css/primeflex.min.css"
+		library="ecuador-layout" />
+	<h:outputStylesheet name="css/layout-amber.css"
+		library="ecuador-layout" />
+</h:body>
+
+</html>

@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:h="http://java.sun.com/jsf/html" 
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ecuador">
+
+<div class="layout-sidebar">
+    <div class="layout-menu-title">MENU</div>
+    <h:form id="menuform">
+        <pe:menu widgetVar="EcuadorMenuWidget">
+        	<p:menuitem id="m_landing" value="Start" icon="pi pi-fw pi-calendar-plus" outcome="/landing" />
+            <p:menuitem id="m_mainpage" value="Strona główna" icon="pi pi-fw pi-home" outcome="/mainpage" />
+            <p:menuitem id="m_listauserow" value="Lista Użytkowników" icon="pi pi-fw pi-table" outcome="/listauserow" rendered="#{remoteClient.details.rola == 'Admin'}"/>
+            <p:menuitem id="m_databoard" value="Statystyki" icon="pi pi-fw pi-table" outcome="/databoard" rendered="#{remoteClient.details.rola == 'Admin'}"/>
+            <p:submenu id="m_default" label="Rezerwacja" icon="pi pi-fw pi-briefcase">
+                <p:menuitem id="m_expcalendar" value="Nowe spotkanie" icon="pi pi-fw pi-calendar-plus" outcome="/expcalendar" />
+                <p:menuitem id="m_finder" value="Asystent rezerwacji" icon="pi pi-fw pi-table" outcome="/finder" />
+            </p:submenu>
+            <p:menuitem id="m_listaspotkan" value="Lista Spotkań" icon="pi pi-fw pi-table" outcome="/listaspotkan" />
+            <p:submenu id="m_default2" label="Walidacja" icon="pi pi-fw pi-briefcase" rendered="#{remoteClient.details.rola == 'Admin'}">
+            	<p:menuitem id="m_login" value="Login" icon="pi pi-fw pi-sign-in" outcome="/login" />
+                <p:menuitem id="m_regsiter" value="Regsiter" icon="pi pi-fw pi-sign-in" outcome="/register" />
+                <p:menuitem id="m_registerinfo" value="Register Info" icon="pi pi-fw pi-sign-in" outcome="/registerinfo" />
+            </p:submenu>
+            <p:submenu id="m_default3" label="Util" icon="pi pi-fw pi-briefcase" rendered="#{remoteClient.details.rola == 'Admin'}">
+                <p:menuitem id="m_error" value="Error" icon="pi pi-fw pi-times-circle" outcome="/error" />
+                <p:menuitem id="m_notfound" value="Not Found" icon="pi pi-fw pi-exclamation-circle" outcome="/notfound" />
+                <p:menuitem id="m_access" value="Access Denied" icon="pi pi-fw pi-lock" outcome="/access" />
+                <p:menuitem id="m_empty" value="Empty" icon="pi pi-fw pi-circle-off" outcome="/empty" />
+            </p:submenu>
+            <p:menuitem id="m_doc" value="Documentacja PF" icon="pi pi-fw pi-info-circle" outcome="/documentation" rendered="#{remoteClient.details.rola == 'Admin'}"/>
+            <p:menuitem id="m_about" value="Informacje" icon="pi pi-fw pi-home" outcome="/about" />
+        </pe:menu>
+    </h:form>
+    </div>
+</ui:composition>

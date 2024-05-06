@@ -1,0 +1,21 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<div id="layout-right-panel">
+		<div class="right-panel-scroll-content">
+			<h2 style="color: white">Moje spotkania</h2>
+			<br></br>
+			<div class="separator" style="color: white"></div>
+
+			<p:schedule id="sideschedule" value="#{dashboardBB.myEventModelFromNow}"
+				widgetVar="mysideschedule" view="listMonth" allDaySlot="false" resizable="false"
+				draggable="false" displayEventEnd="true" showWeekends="false"
+				showWeekNumbers="false" rightHeaderTemplate=""
+				leftHeaderTemplate="prev,next" height="auto" tooltip="true"/>
+		</div>
+	</div>
+
+</ui:composition>

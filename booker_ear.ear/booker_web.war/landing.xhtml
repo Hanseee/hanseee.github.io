@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<f:facet name="first">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+	</f:facet>
+	<title>PrimeFaces Ecuador</title>
+	<script type="text/javascript">
+		hideMenu = function() {
+			var menu = $('#landing-menu');
+			menu.removeClass('landing-menu-active');
+			$(document.body).removeClass('landing-masked').children(
+					'.landing-wrapper').children('.layout-mask').remove();
+		}
+
+		showMenu = function() {
+			var menu = $('#landing-menu');
+			menu.addClass('landing-menu-active');
+			$(document.body).addClass('landing-masked').children(
+					'.landing-wrapper').append(
+					'<div class="layout-mask"></div>');
+		}
+
+		$(function() {
+			$('#menu-btn').on('click', function(e) {
+				var menu = $('#landing-menu');
+				if (menu.hasClass('landing-menu-active')) {
+					hideMenu();
+				} else {
+					showMenu();
+				}
+
+				e.preventDefault();
+			});
+
+			$('#landing-menu').find('a').on('click', function(e) {
+				hideMenu();
+				e.preventDefault();
+			});
+		});
+	</script>
+</h:head>
+
+<h:body styleClass="landing-body">
+	<div class="landing-wrapper">
+		<div id="header">
+			<div class="header-top">
+				<div class="grid">
+					<a id="menu-btn" href="#" class="menu-button-mobile"> <p:graphicImage
+							name="images/icon-menu.svg" library="ecuador-layout" />
+					</a>
+				</div>
+			</div>
+
+			<div class="header-content animation-element slide-bottom">
+				<div class="header-bg">
+					<span>Lipton Booker:</span>
+				</div>
+				<div class="header-bg">
+					<span>Spotkajmy się przy herbacie!</span>
+				</div>
+				<h2 style="line-height: 1.5">Jesteśmy największą,
+					międzynarodową firmą herbacianą na świecie. Produkujemy najstarszą
+					i najbardziej rozpoznawalną markę herbaty - Lipton. Jako firma
+					stawiamy na zrównoważony rozwój i wellbeing. Naszą pozycję
+					zawdzięczamy kulturze dialogu.</h2>
+				<div>
+					<p:button class="landing-button" outcome="login" value="Logowanie"
+						style="margin-right: 20px" rendered="#{remoteClient.details.username == null}" />
+					<p:button class="landing-button" outcome="register"
+						value="Rejestracja" style="margin-right: 20px" rendered="#{remoteClient.details.username == null}" />
+					<h:form>
+						<p:commandButton type="submit" value="Zaloguj jako admin"
+							action="#{loginBB.doInstantLoginAsAdmin()}"
+							styleClass="ui-button-raised"
+							rendered="#{remoteClient.details.username == null}" />
+						<p:commandButton type="submit" value="Strona główna"
+							action="#{loginBB.back2Dashboard()}"
+							styleClass="ui-button-raised"
+							rendered="#{remoteClient.details.username != null}" />	
+					</h:form>
+				</div>
+			</div>
+		</div>
+
+		<div id="features">
+			<div>
+				<div class="grid">
+					<div class="col-12 md:col-12 lg:col-4">
+						<div class="features-content">
+							<p:graphicImage name="images/alines/h1.png"
+								library="ecuador-layout" style="width: 80%; height: 40%" />
+							<h3>DLA NATURY</h3>
+							<h5>Uprawa herbat na naszych plantacjach jest prowadzona z
+								myślą o środowisku naturalnym, co potwierdzają międzynarodowe
+								certyfikaty i kontrole.</h5>
+						</div>
+					</div>
+					<div class="col-12 md:col-12 lg:col-4">
+						<div class="features-content">
+							<p:graphicImage name="images/alines/tl1.png"
+								library="ecuador-layout" style="width: 80%; height: 40%" />
+							<h3>DLA NAS</h3>
+							<h5>W ten sposób pozyskiwany przez nas susz ma intensywny
+								smak i aromat, a zróżnicowane uprawy dostarczają nam wiele
+								egzotycznych odmian.</h5>
+						</div>
+					</div>
+					<div class="col-12 md:col-12 lg:col-4">
+						<div class="features-content">
+							<p:graphicImage name="images/alines/s1.png"
+								library="ecuador-layout" style="width: 80%; height: 40%" />
+							<h3>DLA CIEBIE</h3>
+							<h5>Dzięki temu możesz cieszyć się swoją ulubioną herbatą
+								gdziekolwiek jesteś, i mieć pewność że otrzymujesz jakość na
+								najwyższym poziomie.</h5>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="news">
+			<div>
+				<div class="grid">
+					<div class="col-12 md:col-12 news-content">
+						<div style="width: 40%; margin: 0 auto;">
+							<h1>Poznajmy się!</h1>
+							<h4>Mamy ponad 150 lat doświadczenia w produkcji herbaty i
+								jej uprawie na własnych plantacjach, dystrybuujemy 34 marki
+								herbat produkowanych w jeden z naszych 12 fabryk na 4
+								kontynentach - w Europie, Ameryce Północnej, Afryce i Azji. W
+								procesie produkcyjnym korzystamy zarówno z tracycyjnych metod,
+								jak i z nowoczesnych technologii.</h4>
+							<p:separator />
+							<a href="https://www.lipton.com/pl/"> <p:button
+									value="Dowiedz się więcej" /></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div style="margin-top: 5px; margin-bottom: 75px">
+
+			<p:graphicImage name="images/sites.png" library="ecuador-layout"
+				style="width: 80%; position: relative; align: center; height: auto; margin-top: 40px; margin-left:10%" />
+			<div style="width: 40%; margin: 0 auto; margin-top: 40px">
+				<h1 style="text-align: center">Spotkajmy się!</h1>
+				<h4 style="text-align: center">W Polsce prowadzimy trzy
+					oddziały - fabrykę i centrum usług wspólnych w Katowicach oraz
+					centralę w Warszawie. Wierzymy że miejsce pracy ma duży wpływ na
+					nasze samopoczucie więc dokładamy wszelkich starań żeby były
+					odpowiednio urządzone i zaopatrzone.</h4>
+				<h4 style="text-align: center">Możesz nas spotkać pod tymi
+					adresami:</h4>
+				<p:separator />
+				<a href="https://maps.app.goo.gl/P68FeVeqnFgqRm4EA">
+					<h4 style="text-align: center; margin-top: 20px">
+						<i class="pi pi-map-marker" /> Fabryka - Kołodziejska 2, Katowice
+					</h4>
+				</a> <a href="https://maps.app.goo.gl/ESunspMvoTEeJnf66">
+					<h4 style="text-align: center">
+						<i class="pi pi-map-marker" /> Biurowiec - Katowice, ul. Dworcowa
+						10
+					</h4>
+				</a> <a href="https://maps.app.goo.gl/SCBSQcvGHTxCJP6Y9">
+					<h4 style="text-align: center; margin-bottom: 20px">
+						<i class="pi pi-map-marker" /> Warszawa, ul. Piusa Dziekońskiego
+						1
+					</h4>
+				</a>
+				<p:separator />
+			</div>
+
+			<div
+				style="width: 80%; position: relative; align: center; margin: 0 auto; margin-top: 40px">
+				<p:carousel value="#{loginBB.listasal}" var="sala" circular="true"
+					autoplayInterval="2500"
+					responsiveOptions="#{loginBB.responsiveOptions}" numVisible="3"
+					numScroll="1">
+					<div class="product-item">
+						<div class="product-item-content">
+							<div class="mb-3">
+								<p:graphicImage width="100%" height="220px"
+									name="images/sale/#{sala.id}.png" library="ecuador-layout"
+									styleClass="product-image" />
+							</div>
+							<div style="text-align: center; color: black">
+								<h5 class="mb-1">"#{sala.nazwa}"</h5>
+								<h6 class="mb-1">Maksymalna pojemność: #{sala.maxcap} osób</h6>
+								<h6 class="mb-1">Lokalizacja: #{sala.site.lokalizacja}</h6>
+								<br></br>
+							</div>
+						</div>
+					</div>
+				</p:carousel>
+			</div>
+		</div>
+
+		<div id="footer" style="height: 200px">
+			<div class="grid">
+				<div class="col-12 md:col-12 lg:col-4 footer">
+					<div class="logo">
+						<p:graphicImage name="images/Logo and Hero Brands.png"
+							width="350px" library="ecuador-layout" />
+					</div>
+				</div>
+				<div class="col-12 md:col-12 lg:col-8">
+					<div id="footer-menu">
+						<div class="grid">
+							<div class="col-12 md:col-6 lg:col-3 footer-box">
+								<div style="margin-top: 20px">
+									<span><b>NAWIGACJA</b></span><br></br>
+									<h:link outcome="/landing" styleClass="logo-container"  style="color:#000000">Strona powitalna</h:link>
+									<br></br>
+									<h:link outcome="/login" styleClass="logo-container"  style="color:#000000">Login</h:link>
+								</div>
+							</div>
+							<div class="col-12 md:col-6 lg:col-3 footer-box">
+								<div style="margin-top: 20px">
+									<span><b>MARKA LIPTON</b></span> <br></br> <a
+										href="https://www.lipton.com/us/en/where-to-buy/"  style="color:#000000">Gdzie
+										kupić</a> <br></br> <a
+										href="https://www.lipton.com/us/en/our-purpose/"  style="color:#000000">Nasza
+										misja</a>
+								</div>
+							</div>
+							<div class="col-12 md:col-6 lg:col-3 footer-box">
+								<div style="margin-top: 20px">
+									<span><b>LIPTON - KONTAKT</b></span><br></br><a
+										href="https://www.lipton.com/us/en/get-in-touch/" style="color:#000000">Kontakt</a>
+									<br></br> <a href="https://www.liptonteas.com/cookie-notice/"  style="color:#000000">Noty
+										prawne</a>
+								</div>
+							</div>
+							<div class="col-12 md:col-6 lg:col-3 footer-box"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<h:outputStylesheet name="css/primeicons.css" library="ecuador-layout" />
+	<h:outputStylesheet name="css/primeflex.min.css"
+		library="ecuador-layout" />
+	<h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css"
+		library="ecuador-layout" />
+
+	<script>
+		//<![CDATA[
+		var $this = this;
+
+		$(document).ready(function() {
+			$('html').animate({
+				scrollTop : 0
+			}, 1);
+			$('body').animate({
+				scrollTop : 0
+			}, 1);
+		});
+
+		/* Scroll Animate */
+		$('a[href*="#"]:not([href="#"])').click(function() {
+			var target = $(this.hash);
+			if (target.length) {
+				$('html, body').animate({
+					scrollTop : target.offset().top
+				}, 500);
+				return false;
+			}
+		});
+
+		//window and animation items
+		var animation_elements = $.find('.animation-element');
+		var web_window = $(window);
+
+		//check to see if any animation containers are currently in view
+		function check_if_in_view() {
+			//get current window information
+			var window_height = web_window.height();
+			var window_top_position = web_window.scrollTop();
+			var window_bottom_position = (window_top_position + window_height);
+
+			//iterate through elements to see if its in view
+			$
+					.each(
+							animation_elements,
+							function() {
+								//get the element sinformation
+								var element = $(this);
+								var element_height = $(element).outerHeight();
+								var element_top_position = $(element).offset().top;
+								var element_bottom_position = (element_top_position + element_height);
+
+								//check to see if this current container is visible (its viewable if it exists between the viewable space of the viewport)
+
+								if ((element_top_position <= window_bottom_position)) {
+									element.addClass('in-view');
+								}
+
+							});
+		}
+
+		//on or scroll, detect elements in view
+		$(window).on('scroll resize', function() {
+			check_if_in_view()
+		})
+		//trigger our scroll event on initial load
+		$(window).trigger('scroll');
+		//]]>
+	</script>
+</h:body>
+
+</html>

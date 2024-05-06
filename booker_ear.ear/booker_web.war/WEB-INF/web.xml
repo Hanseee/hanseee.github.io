@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+	<context-param>
+		<param-name>javax.faces.PROJECT_STAGE</param-name>
+		<param-value>Production</param-value> <!-- og.: Development -->
+	</context-param>
+	<context-param>
+		<param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>ecuador-amber</param-value>
+    </context-param>
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+	<welcome-file-list>
+		<welcome-file>/dashboard.xhtml</welcome-file>
+	</welcome-file-list>
+	<error-page>
+		<exception-type>javax.faces.application.ViewExpiredException</exception-type>
+		<location>/dashboard.xhtml</location>
+	</error-page>
+	
+<!--   Ten cały komentarz to filtrowanie, po zakońzniu pracy odkomentować i porobić ścieżki routingu| I pewnie bezdzie trzeba dać templaty na public -->
+
+	<filter>
+		<filter-name>SecurityFilter</filter-name>
+		<filter-class>javax.faces.simplesecurity.SecurityFilter</filter-class>
+		<init-param>
+			<param-name>noPermitionPage</param-name>
+			<param-value>/access.xhtml</param-value>
+		</init-param>
+		<init-param>
+			<param-name>permissions</param-name>
+			<param-value>
+/WEB-INF : PUBLIC;
+/javax.faces.resource : PUBLIC;
+/testpage.xhtml : PUBLIC;
+/databoard.xhtml : Admin;
+/listauserow.xhtml : Admin;
+/listaspotkan.xhtml : Admin;
+/about.xhtml : Admin, User;
+/dashboard.xhtml : Admin, User;
+/expcalendar.xhtml : Admin, User;
+/mainpage.xhtml : Admin, User;
+/finder.xhtml : Admin, User;
+/listaspotkan.xhtml : PUBLIC;
+/landing.xhtml : PUBLIC;
+/register.xhtml : PUBLIC;
+/registerinfo.xhtml : PUBLIC;
+/login.xhtml : PUBLIC;
+/passwordreset.xhtml : PUBLIC;
+/access.xhtml : PUBLIC;
+/error.xhtml : PUBLIC;
+/notfound.xhtml : PUBLIC;
+/documentation.xhtml : Admin, User; 
+
+			</param-value>
+		</init-param>
+		<init-param>
+			<param-name>invalidateOnRemoteAddressChange</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<init-param>
+			<param-name>invalidateOnRemoteHostChange</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<init-param>
+			<param-name>invalidateOnRemotePortChange</param-name>
+			<param-value>false</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>SecurityFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+</web-app>

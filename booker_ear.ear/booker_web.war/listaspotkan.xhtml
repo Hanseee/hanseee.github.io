@@ -1,0 +1,147 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="head">
+		<h:outputStylesheet name="css/flags/flags.css" library="demo" />
+	</ui:define>
+
+	<ui:define name="title">Lista rezerwacji</ui:define>
+
+	<ui:define name="viewname">
+		<li><p:link outcome="/listaspotkan">Lista rezerwacji</p:link></li>
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="grid table-demo">
+			<div class="col-12">
+				<div class="card">
+					<h5>Lista spotkań</h5>
+					<h:form id="form">
+						<!--  zmienić customer na spotkanie itd -->
+						<p:dataTable var="spotkanie" value="#{listaBB.spotkanie}"
+							widgetVar="spotkanietable" rows="15" paginator="true"
+							selectionMode="single" selection="#{listaBB.pickedspotkanie}"
+							rowKey="#{spotkanie.id}" paginatorPosition="both"
+							paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							currentPageReportTemplate="{startRecord}-{endRecord} z {totalRecords} spotkań"
+							rowsPerPageTemplate="10,15,20,30,50" stripedRows="true">
+
+							<p:ajax event="rowSelect" update=":form:eventDetail"
+								oncomplete="PF('eventDialog').show()" />
+
+							<p:column headerText="Utworzone przez"
+								sortBy="#{spotkanie.user.username}" filterBy="#{customer.name}"
+								filterMatchMode="contains">
+								<h:outputText value="#{spotkanie.user.username}" rendered="#{remoteClient.details.username != spotkanie.user.username}"/>
+								<h:outputText value="#{spotkanie.user.username}" style="font-weight:bold" rendered="#{remoteClient.details.username == spotkanie.user.username}"/>
+							</p:column>
+
+							<p:column headerText="Nazwa" sortBy="#{spotkanie.nazwa}"
+								filterBy="#{spotkanie.nazwa}" filterMatchMode="contains">
+								<h:outputText value="#{spotkanie.nazwa}" />
+							</p:column>
+
+							<p:column field="sala.nazwa" headerText="Sala"
+								filterMatchMode="contains">
+								<f:facet name="filter">
+									<p:selectOneMenu onchange="PF('spotkanietable').filter()"
+										styleClass="ui-custom-filter">
+										<f:selectItem itemLabel="(Wszystkie)" itemValue="#{null}"
+											noSelectionOption="true" />
+										<!-- hard code ftw -->
+										<f:selectItem itemLabel="Lyons" itemValue="Lyons" />
+										<f:selectItem itemLabel="Pukka" itemValue="Pukka" />
+										<f:selectItem itemLabel="Saga" itemValue="Saga" />
+										<f:selectItem itemLabel="Lipton" itemValue="Lipton" />
+										<f:selectItem itemLabel="Elephant" itemValue="Elephant" />
+										<f:selectItem itemLabel="Konferencyjna"
+											itemValue="Konferencyjna" />
+										<f:selectItem itemLabel="Biuro Projektowe"
+											itemValue="Biuro Projektowe" />
+									</p:selectOneMenu>
+								</f:facet>
+								<h:outputText value="#{spotkanie.sala.nazwa}" />
+							</p:column>
+
+							<!-- to poniżej zadziała dla tego że field jest już w elemencie spotkanie i wyciąga z niego element start (deklaracja w datatable/var) -->
+							<p:column field="start" headerText="Dzień"
+								sortBy="#{spotkanie.start}" filterMatchMode="contains">
+								<f:facet name="filter">
+									<p:datePicker selectionMode="single" pattern="yyyy-MM-dd"
+										onchange="PF('spotkanietable').filter()" />
+
+								</f:facet>
+								<h:outputText value="#{listaBB.fancyDzien(spotkanie.start)}" />
+							</p:column>
+
+
+							<p:column headerText="Godzina rozpoczęcia"
+								sortBy="#{spotkanie.start}">
+								<h:outputText value="#{listaBB.fancyStart(spotkanie.start)}" />
+							</p:column>
+
+							<p:column headerText="Godzina zakończenia"
+								sortBy="#{spotkanie.koniec}">
+								<h:outputText value="#{listaBB.fancyKoniec(spotkanie.koniec)}" />
+							</p:column>
+
+							<p:column headerText="Akcje"
+								rendered="#{remoteClient.details.rola == 'Admin'}">
+								<p:commandButton value="Usuń"
+									action="#{listaBB.eventDrop(spotkanie)}" ajax="false" />
+							</p:column>
+
+						</p:dataTable>
+
+						<p:dialog header="Szczegóły spotkanie" widgetVar="eventDialog"
+							modal="true" showEffect="fade" hideEffect="fade"
+							resizable="false">
+							<p:outputPanel id="eventDetail" style="text-align:center">
+								<p:panelGrid columns="2"
+									rendered="#{listaBB.pickedspotkanie != null}"
+									columnClasses="label,value"
+									style="width: 35rem; margin-bottom: 2em; text-align:center">
+									<h:outputText value="Tytuł:" style="font-weight:bold"/>
+									<h:outputText value="#{listaBB.pickedspotkanie.nazwa}" />
+									<h:outputText value="Utworzono przez:" style="font-weight:bold"/>
+									<p:column>
+										<h:outputText value="#{listaBB.pickedspotkanie.user.username}" />
+									</p:column>
+									<h:outputText value="Początek:" style="font-weight:bold"/>
+									<p:column>
+										<h:outputText value="#{listaBB.pickedspotkanie.start}" />
+									</p:column>
+									<h:outputText value="Koniec:" style="font-weight:bold"/>
+									<p:column>
+										<h:outputText value="#{listaBB.pickedspotkanie.koniec}" />
+									</p:column>
+								</p:panelGrid>
+								<p:card style="width: 35rem; margin-bottom: 2em; text-align:center">
+									<f:facet name="title"> Opis </f:facet>
+									<p>#{listaBB.pickedspotkanie.opis}</p>
+								</p:card>
+								<p:card style="width: 35rem; margin-bottom: 2em; text-align:center">
+									<f:facet name="title"> Uczestnicy </f:facet>
+									<p:dataTable var="invited" value="#{listaBB.getInvited(listaBB.pickedspotkanie.id)}"
+										scrollable="true" scrollHeight="250" >
+										<p:column headerText="Nazwa uzytkownika" style="text-align:center">
+											<h:outputText value="#{invited.username}" />
+										</p:column>
+										<p:column headerText="Adres email" style="text-align:center">
+											<h:outputText value="#{invited.email}" />
+										</p:column>
+									</p:dataTable>
+								</p:card>
+							</p:outputPanel>
+						</p:dialog>
+
+					</h:form>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+
+</ui:composition>

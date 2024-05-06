@@ -1,0 +1,355 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Expcalendar</ui:define>
+	<ui:define name="viewname">
+		<li><p:link outcome="/expcalendar">Kalendarium</p:link></li>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form>
+			<div class="grid" style="height: 700px">
+				<div class="col-9">
+					<div class="card">
+
+
+						<!-- TO JEST DO UPORZĄDKOWANIA JAK TYLKO RESZTA ZOSTANIE OGARNIĘTA-->
+						<script>
+                window.ExtenderShowcase = undefined;
+            </script>
+						<script>
+                window.ExtenderShowcase = function () {
+                    try {
+                        #{calendarDemoView.extenderCode}
+                    } catch (e) {
+                        console.error("Extender bład:", e);
+                        PF("messagesGrowl").renderMessage({
+                            severity: "error",
+                            summary: "Invalid extender",
+                            detail: "ERROR EXTENDERA: " + e.message
+                        });
+                    }
+                };
+            </script>
+						<script>
+                if (typeof window.ExtenderShowcase === "undefined") {
+                    PF("messagesGrowl").renderMessage({
+                        severity: "error",
+                        summary: "Problem extendera",
+                        detail: "ERROR SYNTAXU EXTENDERA - SPRAWDŹ SYNTAX"
+                    });
+                }
+            </script>
+
+						<p:growl id="messages" showDetail="true" />
+						<!-- ew usunąć exstender i wszystkie scripty z góry-->
+						<p:schedule id="schedule" value="#{calendarDemoView.eventModel}"
+							widgetVar="myschedule" extender="window.ExtenderShowcase"
+							view="timeGridWeek" minTime="07:00:00" maxTime="17:00:00"
+							allDaySlot="false" slotDuration="00:15:00" height="700px"
+							nextDayThreshold="06:15:00" resizable="true" showWeekends="false"
+							showWeekNumbers="true" tooltip="true">
+							<p:ajax event="dateSelect"
+								listener="#{calendarDemoView.onDateSelect}"
+								update="eventDetails" oncomplete="PF('eventDialog').show();" />
+							<p:ajax event="eventSelect"
+								listener="#{calendarDemoView.onEventSelect}"
+								update="eventDetails" oncomplete="PF('eventDialog').show();" />
+							<!-- oncomplete="PF('eventDialog').show();"  -->
+							<p:ajax event="eventMove"
+								listener="#{calendarDemoView.onEventMove}" update="messages" />
+							<p:ajax event="eventResize"
+								listener="#{calendarDemoView.onEventResize}" update="messages" />
+						</p:schedule>
+
+						<p:dialog widgetVar="eventDialog" header="Szczegóły spotkania"
+							showEffect="fade" width="450" responsive="true">
+							<p:outputPanel id="eventDetails" styleClass="ui-fluid">
+								<p:accordionPanel widgetVar="basic">
+									<p:tab title="Szczegóły">
+										<div class="field">
+											<p:outputLabel for="title" value="Tytuł:" />
+											<p:inputText id="title"
+												value="#{calendarDemoView.event.title}" required="true">
+												<f:validateLength minimum="1" />
+											</p:inputText>
+										</div>
+										<div class="field">
+											<p:outputLabel for="description"
+												value="Krótki opis (do 200 znaków):" />
+											<p:inputText id="description" maxlength="200"
+												value="#{calendarDemoView.event.description}"
+												required="true">
+												<f:validateLength minimum="1" />
+											</p:inputText>
+										</div>
+										<div class="field">
+											<p:outputLabel for="from" value="Początek spotkania:" />
+											<p:datePicker id="from"
+												value="#{calendarDemoView.event.startDate}"
+												pattern="dd/MM/yyyy" showTime="true" appendTo="@(body)"
+												stepMinute="15" />
+										</div>
+										<div class="field">
+											<p:outputLabel for="to" value="Koniec spotkania:" />
+											<p:datePicker id="to"
+												value="#{calendarDemoView.event.endDate}"
+												pattern="dd/MM/yyyy" showTime="true" appendTo="@(body)"
+												stepMinute="15" />
+										</div>
+									</p:tab>
+
+									<p:tab title="Zaproszeni"
+										rendered="#{calendarDemoView.event.id != null}">
+										<div class="field">
+											<p:dataTable var="user"
+												value="#{calendarDemoView.invitedusers}"
+												widgetVar="usertabela" rows="15" paginator="false"
+												stripedRows="true" scrollable="true" scrollWidth="95%"
+												scrollHeight="350">
+												<p:column headerText="Imię" sortBy="#{user.username}"
+													filterBy="#{user.username}" filterMatchMode="contains"
+													style="width: 170px">
+													<h:outputText value="#{user.username}" />
+												</p:column>
+												<p:column headerText="Adres email" sortBy="#{user.email}"
+													filterBy="#{user.email}" filterMatchMode="contains"
+													style="width: 220px">
+													<h:outputText value="#{user.email}" />
+												</p:column>
+											</p:dataTable>
+										</div>
+									</p:tab>
+
+									<p:tab title="Zaproś użytkowników">
+										<div class="field">
+											<p:selectManyMenu value="#{calendarDemoView.selectedusers}"
+												var="user" showCheckbox="true" 
+												styleClass="manymenu-advanced" scrollHeight="375"
+												filter="true" filterMatchMode="contains">
+
+												<f:selectItems value="#{userlistaBB.user}" var="u"
+													itemLabel="#{u.email}" itemValue="#{u}" />
+
+												<p:column>
+													<h:outputText value="#{user.email}" />
+												</p:column>
+											</p:selectManyMenu>
+										</div>
+									</p:tab>
+
+								</p:accordionPanel>
+							</p:outputPanel>
+							<f:facet name="footer">
+								<p:commandButton id="addButton" value="Zapisz"
+									update="personalschedule"
+									action="#{calendarDemoView.flashDetailValidation}"
+									icon="pi pi-check"
+									oncomplete="PF('myschedule').update(); PF('myschedule').update(); PF('eventDialog').hide();" />
+								<p:commandButton type="reset" value="Reset"
+									styleClass="ui-button-secondary" icon="pi pi-refresh" />
+								<p:commandButton type="deleteButton" value="Usuń"
+									update="personalschedule" styleClass="ui-button-warning"
+									icon="pi pi-trash" action="#{calendarDemoView.removeEvent}"
+									oncomplete="PF('myschedule').update(); PF('myschedule').update(); PF('eventDialog').hide();" />
+							</f:facet>
+						</p:dialog>
+					</div>
+				</div>
+				<div class="col-3">
+					<p:card style="height: 55%">
+						<h1 id="tabheader"></h1>
+						<p:accordionPanel multiple="true" widgetVar="options">
+							<p:tab title="Katowice - Fabryka">
+								<f:facet name="actions">
+									<p:commandLink
+										styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"
+										onclick="PF('dkfactory').show();">
+										<h:outputText styleClass="ui-icon pi pi-question" />
+									</p:commandLink>
+									<p:linkButton
+										styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"
+										href="https://maps.app.goo.gl/G2Ug187EmfUEuAqS7"
+										target="_blank">
+										<h:outputText styleClass="ui-icon pi pi-map-marker" />
+									</p:linkButton>
+								</f:facet>
+								<p:commandButton value="Lyons" style="margin-right: 5px"
+									action="#{calendarDemoView.pickedLyons}"
+									onclick="setname('Lyons');"
+									styleClass="rounded-button ui-button-warning" process="@this"
+									oncomplete="PF('myschedule').update(); PF('myschedule2').update();" />
+								<p:commandButton value="Pukka" style="margin-right: 5px"
+									action="#{calendarDemoView.pickedPukka}"
+									onclick="setname('Pukka');"
+									styleClass="rounded-button ui-button-warning" process="@this"
+									oncomplete="PF('myschedule').update(); PF('myschedule2').update();" />
+								<p:commandButton value="Saga" style="margin-right: 5px"
+									action="#{calendarDemoView.pickedSaga}"
+									onclick="setname('Saga');"
+									styleClass="rounded-button ui-button-warning" process="@this"
+									oncomplete="PF('myschedule').update(); PF('myschedule2').update();" />
+							</p:tab>
+						</p:accordionPanel>
+						<p:dialog widgetVar="dkfactory" id="dkfactory"
+							header="Szczegóły lokalizacji: Katowice, Fabryka" modal="true"
+							showEffect="fade" width="1620" responsive="true">
+							<div style="width: 1600px">
+								<span style="display: inline-block; width: 500px;"> <p:graphicImage
+										width="500px" height="300px" name="images/sale/1.png"
+										library="ecuador-layout" styleClass="product-image"
+										style="margin-left: auto; margin-right: auto;display: block;" />
+									<h4 class="mb-1" style="text-align: center">Salka Lyons</h4>
+									<h5 class="mb-1" style="text-align: center">Maksymalna
+										pojemność: 2 osoby</h5>
+								</span> <span style="display: inline-block; width: 500px;"> <p:graphicImage
+										width="500px" height="300px" name="images/sale/2.png"
+										library="ecuador-layout" styleClass="product-image"
+										style="margin-left: auto; margin-right: auto;display: block;" />
+									<h4 class="mb-1" style="text-align: center">Sala
+										spotkaniowa Pukka</h4>
+									<h5 class="mb-1" style="text-align: center">Maksymalna
+										pojemność: 12 osób</h5>
+								</span> <span style="display: inline-block; width: 500px;"> <p:graphicImage
+										width="500px" height="300px" name="images/sale/3.png"
+										library="ecuador-layout" styleClass="product-image"
+										style="margin-left: auto; margin-right: auto;display: block;" />
+									<h4 class="mb-1" style="text-align: center">Sala
+										spotkaniowa Saga</h4>
+									<h5 class="mb-1" style="text-align: center">Maksymalna
+										pojemność: 8 osób</h5>
+								</span>
+							</div>
+						</p:dialog>
+						<p:accordionPanel multiple="true" widgetVar="options2">
+							<p:tab title="Katowice - Biuro">
+								<f:facet name="actions">
+									<p:commandLink
+										styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"
+										onclick="PF('dkoffice').show();">
+										<h:outputText styleClass="ui-icon pi pi-question" />
+									</p:commandLink>
+									<p:linkButton
+										styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"
+										href="https://maps.app.goo.gl/Ki1pWiBVShiNfFY5A"
+										target="_blank">
+										<h:outputText styleClass="ui-icon pi pi-map-marker" />
+									</p:linkButton>
+								</f:facet>
+								<p:commandButton value="Lipton"
+									action="#{calendarDemoView.pickedLipton}"
+									onclick="setname('Lipton');" style="margin-right: 5px"
+									styleClass="rounded-button ui-button-warning" process="@this"
+									oncomplete="PF('myschedule').update(); PF('myschedule2').update();" />
+								<p:commandButton value="Elephant"
+									action="#{calendarDemoView.pickedElephant}"
+									onclick="setname('Elephant');" style="margin-right: 5px"
+									styleClass="rounded-button ui-button-warning" process="@this"
+									oncomplete="PF('myschedule').update(); PF('myschedule2').update();" />
+							</p:tab>
+						</p:accordionPanel>
+
+						<p:dialog widgetVar="dkoffice" id="dkoffice"
+							header="Szczegóły lokalizacji: Katowice, Biurowiec" modal="true"
+							showEffect="fade" width="1200" responsive="true">
+							<div style="width: 1180px">
+								<span style="display: inline-block; width: 580px;"> <p:graphicImage
+										width="550px" height="300px" name="images/sale/4.png"
+										library="ecuador-layout" styleClass="product-image"
+										style="margin-left: auto; margin-right: auto;display: block;" />
+									<h4 class="mb-1" style="text-align: center">Sala
+										konferencyjna Lipton</h4>
+									<h5 class="mb-1" style="text-align: center">Maksymalna
+										pojemność: 30 osób</h5>
+								</span> <span style="display: inline-block; width: 580px;"> <p:graphicImage
+										width="550px" height="300px" name="images/sale/5.png"
+										library="ecuador-layout" styleClass="product-image"
+										style="margin-left: auto; margin-right: auto;display: block;" />
+									<h4 class="mb-1" style="text-align: center">Sala
+										spotkaniowa Elephant</h4>
+									<h5 class="mb-1" style="text-align: center">Maksymalna
+										pojemność: 12 osób</h5>
+								</span>
+							</div>
+						</p:dialog>
+
+						<p:accordionPanel multiple="true" widgetVar="options3">
+							<p:tab title="Warszawa - Centrala">
+								<f:facet name="actions">
+									<p:commandLink
+										styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"
+										onclick="PF('dwarsaw').show();">
+										<h:outputText styleClass="ui-icon pi pi-question" />
+									</p:commandLink>
+									<p:linkButton
+										styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"
+										href="https://maps.app.goo.gl/AUrvnS54BLn1toGA9"
+										target="_blank">
+										<h:outputText styleClass="ui-icon pi pi-map-marker" />
+									</p:linkButton>
+								</f:facet>
+								<p:commandButton value="Konferencyjna"
+									action="#{calendarDemoView.pickedConf}"
+									onclick="setname('Konferencyjna');" style="margin-right: 5px"
+									styleClass="rounded-button ui-button-warning" process="@this"
+									oncomplete="PF('myschedule').update(); PF('myschedule2').update();" />
+								<p:commandButton value="Projektowa"
+									action="#{calendarDemoView.pickedProjectRoom}"
+									onclick="setname('Projektowa');" style="margin-right: 5px"
+									styleClass="rounded-button ui-button-warning" process="@this"
+									oncomplete="PF('myschedule').update(); PF('myschedule2').update();" />
+							</p:tab>
+						</p:accordionPanel>
+						<p:dialog widgetVar="dwarsaw" id="dwarsaw"
+							header="Szczegóły lokalizacji: Warszawa, Centrala" modal="true"
+							showEffect="fade" width="1200" responsive="true">
+							<div style="width: 1180px">
+								<span style="display: inline-block; width: 580px;"> <p:graphicImage
+										width="550px" height="300px" name="images/sale/6.png"
+										library="ecuador-layout" styleClass="product-image"
+										style="margin-left: auto; margin-right: auto;display: block;" />
+									<h4 class="mb-1" style="text-align: center">Główna sala
+										konferencyjna</h4>
+									<h5 class="mb-1" style="text-align: center">Maksymalna
+										pojemność: 80 osób</h5>
+								</span> <span style="display: inline-block; width: 580px;"> <p:graphicImage
+										width="550px" height="300px" name="images/sale/7.png"
+										library="ecuador-layout" styleClass="product-image"
+										style="margin-left: auto; margin-right: auto;display: block;" />
+									<h4 class="mb-1" style="text-align: center">Sala biura
+										projektowego</h4>
+									<h5 class="mb-1" style="text-align: center">Maksymalna
+										pojemność: 10 osób</h5>
+								</span>
+							</div>
+						</p:dialog>
+					</p:card>
+
+					<script>
+					document.getElementById("tabheader").innerHTML = 'Sala Lyons';
+					function setname(name) {
+						let nameval = name;
+						document.getElementById("tabheader").innerHTML = 'Sala ' + nameval;
+					}
+					</script>
+
+					<p:card style="height: 42%; margin-top: 20px">
+						<f:facet name="title" widgetVar="secondcardtitle">
+					        Plan dnia
+					    </f:facet>
+						<p:schedule id="personalschedule"
+							value="#{calendarDemoView.personalEventModel}" height="auto"
+							widgetVar="myschedule2" view="listDay" rightHeaderTemplate=""
+							tooltip="true" />
+					</p:card>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

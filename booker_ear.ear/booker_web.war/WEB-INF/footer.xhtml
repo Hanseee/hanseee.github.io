@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <div class="grid">
+        <div class="col-12 md:col-12 lg:col-4 logo-container-outer">
+            <h:link outcome="/landing" styleClass="logo-container">
+                <p:graphicImage name="images/Logo and Region_POLAND.png" library="ecuador-layout" width="200px" />
+            </h:link>
+        </div>
+        <div class="col-12 md:col-12 lg:col-8" style="text-align:center">
+            <div id="footer-menu">
+                <div class="grid">
+                    <div class="col-12 md:col-6 lg:col-3 footer-box">
+                        <span>NAWIGACJA</span>
+                        <h:link outcome="/landing" styleClass="logo-container">Strona powitalna</h:link>
+                        <h:link outcome="/about" styleClass="logo-container">O projekcie</h:link>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-3 footer-box">
+                        <span>MARKA LIPTON</span>
+                        <a href="https://www.lipton.com/us/en/where-to-buy/">Gdzie kupić</a>
+                        <a href="https://www.lipton.com/us/en/our-purpose/">Nasza misja</a>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-3 footer-box">
+                        <span>LIPTON - KONTAKT</span>
+                        <a href="https://www.lipton.com/us/en/get-in-touch/">Kontakt</a>
+                        <a href="https://www.liptonteas.com/cookie-notice/">Noty prawne</a>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-3 footer-box">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ui:composition>

@@ -1,0 +1,75 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Informacje</ui:define>
+
+	<ui:define name="viewname">
+		<li><p:link outcome="/about">Informacje</p:link></li>
+	</ui:define>
+
+	<ui:define name="content">
+		<div>
+			<p:graphicImage name="images/noalines/six_cups-3E-ALout.jpg"
+				library="ecuador-layout" style="width: 100%" />
+		</div>
+		<div class="grid">
+			<div class="col-6">
+				<p:card style="margin-top: 30px">
+					<f:facet name="title"> Projekt </f:facet>
+					<p:separator />
+					<h5>Projekt "Booker - system rezerwacji sal" jest elementem
+						mojej pracy inżynierskiej. Zakładał utworzenie w pełni
+						funkcjonalnej aplikacji przeznaczonej do działania w korporacyjnym
+						intranecie, umożliwiającej użytkownikom ustalenie rezerwacji
+						wybranej lokalizacji - sali, pokoju, gabinetu - w celu
+						przeprowadzenia szkoleń, audytów lub spotkań. Aplikacja zostanie
+						wyposażona w podstawowe mechanizmy bezpieczeństwa oparte na
+						autoryzacji i uwierzytelnianiu użytkowników, a także kontroli
+						dostępu do poszczególnych modułów.</h5>
+				</p:card>
+				<p:card style="margin-top: 30px">
+					<f:facet name="title"> Licencje </f:facet>
+					<p:separator />
+					<h5>
+						Warstwa wizualna projektu była tworzona w oparciu o rozwiązania
+						zawarte w bibliotece Primefaces, zawartych w niej podbibliotekach
+						takich jak FullCallendar JS a także komercyjnego szablonu
+						"Ecuador" tejże firmy (numer licencji: #54591983)<br></br> System
+						routingu/ochrony zasobów jest oparty na rozwiązaniu opracowanym
+						przez profesora naszej uczelni Dr.inż. Przmysława Kudłacika i
+						wykorzystana za jego (werbalną) zgodą.
+					</h5>
+				</p:card>
+
+			</div>
+			<div class="col-6">
+				
+				<p:card style="margin-top: 30px">
+					<f:facet name="title"> Dodatkowe informacje </f:facet>
+					<p:separator />
+					<h5>Przed skorzystaniem z projektu należy przeczytać i
+						zaakceptować przedstawione warunki użytkowania. Korzystając ze
+						strony, Użytkownik zobowiązuje się do przestrzegania warunków
+						użytkowania. W przypadku braku akceptacji tych warunków należy
+						powstrzymać się od korzystania z tej strony. Firma Lipton nie jest
+						w tej chwili właścicielem projektu ale zachowuje prawo do jego
+						wykorzystywania w celach komercyjnych. Wszystkie grafiki zostały
+						wykorzystane za zgodą właściciela.</h5>
+				</p:card>
+				<p:card style="margin-top: 30px">
+					<f:facet name="title"> Kontakt </f:facet>
+					<p:separator />
+					<h5>
+						W przypadku jakichkolwiek pytań lub uwag prosimy o kontakt:<br></br><br></br>
+						Adres prywatny: mmnajgebauer@gmail.com <br></br> Adres służbowy:
+						michal.najgebauer@lipton.com <br></br> Numer telefonu (służbowy):
+						+48 607 575 515
+					</h5>
+				</p:card>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

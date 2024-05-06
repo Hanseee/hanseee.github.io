@@ -1,0 +1,174 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Asystent rezerwacji</ui:define>
+
+	<ui:define name="viewname">
+		<li><p:link outcome="/finder">Asystent rezerwacji</p:link></li>
+	</ui:define>
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{salalistaBB.onload}" />
+		</f:metadata>
+
+		<div class="grid">
+			<div class="col-3">
+				<p:card style="text-align:center;height:550px;">
+					<h:form style="margin-top: 50px">
+						<h2>Szczegóły</h2>
+						<br></br>
+						<div class="field">
+							<i class="pi pi-calendar-plus"> <p:outputLabel for="from"
+									value=" Początek spotkania:" /></i> <br></br>
+							<p:datePicker id="from" value="#{salalistaBB.pickedstart}"
+								pattern="dd/MM/yyyy" showTime="true" appendTo="@(body)"
+								stepMinute="15" style="margin-top: 5px; margin-bottom:15px;" mindate="#{salalistaBB.timern}"/>
+						</div>
+						<div class="field">
+							<i class="pi pi-calendar-minus"> <p:outputLabel for="to"
+									value=" Koniec spotkania:" /></i> <br></br>
+							<p:datePicker id="to" value="#{salalistaBB.pickedkoniec}"
+								pattern="dd/MM/yyyy" showTime="true" appendTo="@(body)"
+								stepMinute="15" style="margin-top: 5px; margin-bottom:15px"
+								lang="pl" />
+						</div>
+						<div class="field">
+							<i class="pi pi-map-marker"> <p:outputLabel for="@next"
+									value=" Lokalizacja:" /></i> <br></br>
+							<p:selectOneMenu id="option"
+								value="#{salalistaBB.selectedOption}"
+								style="margin-top: 5px; margin-bottom:15px">
+								<f:selectItem itemLabel="Dowolne" itemValue="0" />
+								<f:selectItem itemLabel="Katowice - Fabryka" itemValue="1" />
+								<f:selectItem itemLabel="Katowice - Biuro" itemValue="2" />
+								<f:selectItem itemLabel="Warszawa - Centrala" itemValue="3" />
+							</p:selectOneMenu>
+						</div>
+						<br></br>
+
+						<div class="field">
+							<p:commandButton type="Submit" value="Wyszukaj sale"
+								icon="pi pi-check" iconPos="right"
+								action="#{salalistaBB.searchsale()}"
+								style="width: 50%; height:50px" />
+						</div>
+					</h:form>
+				</p:card>
+				<p:card style="text-align:center; margin-top:40px">
+					<p:linkButton type="button" value="Wybierz poprzez kalendarz"
+						icon="pi pi-calendar"
+						styleClass="ui-button-outlined ui-button-warning"
+						outcome="/expcalendar"
+						style="width: 90%; height:35px; background-color: gray" />
+				</p:card>
+			</div>
+
+			<div class="col-9">
+
+				<div class="card">
+					<h:form id="pierwszyform">
+						<p:dataTable var="sala" value="#{salalistaBB.finallist}"
+							widgetVar="listasal" id="listasal" scrollable="true"
+							scrollHeight="600">
+							<p:column headerText="Panorama">
+								<p:graphicImage width="80%" height="100px"
+									name="images/sale/#{sala.id}.png" library="ecuador-layout"
+									styleClass="product-image" />
+							</p:column>
+							<p:column headerText="Nazwa">
+								<h:outputText value="#{sala.nazwa}" style="font: 20px Arial;" />
+							</p:column>
+							<p:column headerText="Miejsc" style="width: 100px" >
+								<h:outputText value="#{sala.maxcap}"
+									style="font: 18px Arial" />
+							</p:column>
+							<p:column headerText="Lokalizacja">
+								<h:outputText value="#{sala.site.lokalizacja}"
+									style="font: 18px Arial" />
+							</p:column>
+							<p:column headerText="">
+								<p:commandButton type="button" value="Zarezerwuj"
+									onclick="funcset(#{sala.id}); PF('eventDialog').show();"
+									style="width: 100px" />
+							</p:column>
+						</p:dataTable>
+					</h:form>
+
+					<p:dialog widgetVar="eventDialog" header="Uzupełnij szczegóły"
+						showEffect="fade" width="450" responsive="true">
+						<h:form id="drugiform">
+							<p:outputPanel id="eventDetails" styleClass="ui-fluid">
+								<p:accordionPanel widgetVar="basic">
+									<p:tab title="Szczegóły">
+										<div class="field">
+											<p:outputLabel for="title" value="Tytuł:" />
+											<p:inputText id="title" value="#{salalistaBB.nazwaev}"
+												required="true">
+												<f:validateLength minimum="1" />
+											</p:inputText>
+										</div>
+										<div class="field">
+											<p:outputLabel for="description"
+												value="Krótki opis (do 200 znaków):" />
+											<p:inputText id="description" maxlength="200"
+												value="#{salalistaBB.opisev}" required="true">
+												<f:validateLength minimum="1" />
+											</p:inputText>
+										</div>
+										<div class="field">
+											<p:outputLabel for="from" value="Początek spotkania:" />
+											<p:datePicker id="from" value="#{salalistaBB.startev}"
+												pattern="dd/MM/yyyy" showTime="true" appendTo="@(body)"
+												stepMinute="15" mindate="#{salalistaBB.pickedstart}"
+												maxdate="#{salalistaBB.pickedkoniec}" />
+										</div>
+										<div class="field">
+											<p:outputLabel for="to" value="Koniec spotkania:" />
+											<p:datePicker id="to" value="#{salalistaBB.koniecev}"
+												pattern="dd/MM/yyyy" showTime="true" appendTo="@(body)"
+												stepMinute="15" mindate="#{salalistaBB.pickedstart}"
+												maxdate="#{salalistaBB.pickedkoniec}" />
+										</div>
+									</p:tab>
+									<p:tab title="Zaproś użytkowników">
+										<div class="field">
+											<p:selectManyMenu value="#{calendarDemoView.selectedusers}"
+												var="user" filter="true" filterMatchMode="contains"
+												showCheckbox="true" styleClass="manymenu-advanced">
+												<f:selectItems value="#{userlistaBB.user}" var="u"
+													itemLabel="#{u.id}" itemValue="#{u}" />
+												<p:column>
+													<h:outputText value="#{user.email}" />
+												</p:column>
+												<p:column>
+													<h:outputText value="#{user.username}" />
+												</p:column>
+											</p:selectManyMenu>
+										</div>
+									</p:tab>
+								</p:accordionPanel>
+								<br></br>
+								<p:commandButton id="addButton" value="Zarezerwuj"
+									action="#{salalistaBB.detValid()}" icon="pi pi-check"
+									oncomplete="PF('eventDialog').hide();" />
+							</p:outputPanel>
+							<p:inputText id="sidinput" type="hidden"
+								value="#{salalistaBB.pickedsalaid}" />
+							<script type="text/javascript">
+							function funcset(sid) {
+								let intval = parseInt(sid)
+								document.getElementById("drugiform:sidinput").value = intval;
+							}
+						</script>
+						</h:form>
+					</p:dialog>
+
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

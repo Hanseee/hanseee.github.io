@@ -1,0 +1,73 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Statystyki</ui:define>
+
+	<ui:define name="viewname">
+		<li><p:link outcome="/databoard">Statystyki</p:link></li>
+	</ui:define>
+	
+	<f:metadata>
+   	<f:viewAction action="#{datacenterBB.f5test}" onPostBack="true"/>
+	</f:metadata>
+
+	<ui:define name="content">
+		<div class="grid">
+			<div class="col-3">
+				<p:card style="margin-top: 30px">
+					<f:facet name="title">Dystrybucja spotkań: Lokalizacje</f:facet>
+					<p:separator />
+					<p:pieChart model="#{datacenterBB.piesite}"/>
+				</p:card>
+			</div>
+			<div class="col-3">
+				<p:card style="margin-top: 30px">
+					<f:facet name="title">Dystrybucja spotkań: Sale</f:facet>
+					<p:separator />
+					<p:pieChart model="#{datacenterBB.piesala}"/>
+				</p:card>
+			</div>
+			<div class="col-3">
+				<p:card style="margin-top: 30px">
+					<f:facet name="title">Średnia ilość uczestników</f:facet>
+					<p:separator />
+					<p:pieChart model="#{datacenterBB.pieinvited}"/>
+				</p:card>
+			</div>
+			<div class="col-3">
+				<p:card style="margin-top: 30px;">
+					<f:facet name="title">Oczekujący na zatwierdzenie:</f:facet>
+					<p:separator />
+					<h:form id="form">
+						<p:dataTable var="user" value="#{datacenterBB.user}"
+							widgetVar="usertabela" rows="15" scrollable="true"
+							rowsPerPageTemplate="10,15,20,30,50" stripedRows="true">
+							<p:column headerText="Adres email" sortBy="#{user.email}"
+								filterBy="#{user.email}" filterMatchMode="contains">
+								<h:outputText value="#{user.email}" />
+							</p:column>
+							<p:column headerText=""
+								style="width: 100px; text-align: center">
+								<p:commandButton type="submit" value="Aktywuj"
+									styleClass="ui-button-outlined ui-button-success"
+									style="width: 100px"
+									action="#{datacenterBB.switchActivity(user)}" rendered="#{user.active == 0}" ajax="false" />
+								<h:outputText value="Użytkownik aktywny" rendered="#{user.active == 1}"/>
+							</p:column>
+						</p:dataTable>
+					</h:form>
+				</p:card>
+			</div>
+		</div>
+		<div class="grid" style="height: 400px">
+			<div class="col-9" style="height: 400px"><p:card> 
+			<f:facet name="title">Trend spotkaniowy (miesiąc):</f:facet>
+			<p:barChart model="#{datacenterBB.hbarModel}" style="width: 100%; height: 300px"/>
+			</p:card></div>
+			<div class="col-3"></div>
+		</div>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,140 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+	<ui:define name="title">Strona Główna</ui:define>
+
+	<ui:define name="viewname">
+		<li><p:link outcome="/mainpage">Strona Główna</p:link></li>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:form>
+			<div class="grid" style="height: 700px">
+				<div class="col-8">
+					<div class="card">
+						<p:schedule id="schedule" value="#{dashboardBB.myEventModel}"
+							widgetVar="myschedule" extender="window.ExtenderShowcase"
+							view="timeGridWeek" minTime="07:00:00" maxTime="17:00:00"
+							allDaySlot="false" slotDuration="00:15:00"
+							nextDayThreshold="06:15:00" height="700px" resizable="false"
+							draggable="false" displayEventEnd="true" showWeekends="false"
+							showWeekNumbers="true" tooltip="true">
+							<p:ajax event="eventSelect"
+								listener="#{dashboardBB.onEventSelect}" update="eventDetails"
+								oncomplete="PF('eventDialog').show();" />
+						</p:schedule>
+
+						<p:dialog widgetVar="eventDialog" header="Szczegóły"
+							showEffect="fade" width="450" responsive="true">
+							<p:outputPanel id="eventDetails" styleClass="ui-fluid">
+								<p:accordionPanel widgetVar="basic">
+									<p:tab title="Szczegóły">
+										<div class="field">
+											<table style="margin-left: 15px">
+												<tr>
+												<td style="width: 150px"><b><p:outputLabel value="Tytuł: " /></b></td>
+												<td><b>#{dashboardBB.pickedspotkanie.nazwa}</b></td>
+												</tr>
+												<tr>
+												<td><p:outputLabel value="Opis: " /></td>
+												<td>#{dashboardBB.pickedspotkanie.opis}</td>
+												</tr>
+												<tr>
+												<td><p:outputLabel value="Sala: " /></td>
+												<td>#{dashboardBB.pickedspotkanie.sala.nazwa}</td>
+												</tr>
+												<tr>
+												<td><p:outputLabel value="Lokalizacja: " /></td>
+												<td>#{dashboardBB.pickedspotkanie.sala.site.nazwa}</td>
+												</tr>
+												<tr>
+												<td><p:outputLabel value="Adres: " /></td>
+												<td>#{dashboardBB.pickedspotkanie.sala.site.lokalizacja}</td>
+												</tr>
+												<tr>
+												<td><b><p:outputLabel value="Początek spotkania: " /></b></td>
+												<td><b>#{dashboardBB.clickedstart}</b></td>
+												</tr>
+												<tr>
+												<td><b><p:outputLabel value="Koniec spotkania: " /></b></td>
+												<td><b>#{dashboardBB.clickedkoniec}</b></td>
+												</tr>
+											</table>
+										</div>
+									</p:tab>
+									<p:tab title="Zaproszeni"
+										rendered="#{dashboardBB.event.id != null}">
+										<div class="field">
+											<p:dataTable var="user" value="#{dashboardBB.invitedusers}"
+												widgetVar="usertabela" rows="15" paginator="false"
+												stripedRows="true" scrollable="true" scrollWidth="95%"
+												scrollHeight="350">
+												<p:column headerText="Imię" sortBy="#{user.username}"
+													filterBy="#{user.username}" filterMatchMode="contains"
+													style="width: 170px">
+													<h:outputText value="#{user.username}" />
+												</p:column>
+												<p:column headerText="Adres email" sortBy="#{user.email}"
+													filterBy="#{user.email}" filterMatchMode="contains"
+													style="width: 220px">
+													<h:outputText value="#{user.email}" />
+												</p:column>
+											</p:dataTable>
+										</div>
+									</p:tab>
+								</p:accordionPanel>
+							</p:outputPanel>
+						</p:dialog>
+
+					</div>
+				</div>
+				<div class="col-4">
+					<p:card style="height: 60%">
+						<f:facet name="title" widgetVar="cardtitle">
+					        Zarezerwuj salę
+					    </f:facet>
+						<p:carousel value="#{dashboardBB.listasal}" var="sala"
+							circular="true" autoplayInterval="4000"
+							responsiveOptions="#{dashboardBB.responsiveOptions}"
+							numVisible="1" numScroll="1">
+							<div class="product-item">
+								<h:commandLink action="#{dashboardBB.reserve()}">
+									<div class="product-item-content">
+										<div class="mb-3">
+											<p:graphicImage width="100%" height="220px"
+												name="images/sale/#{sala.id}.png" library="ecuador-layout"
+												styleClass="product-image" />
+										</div>
+										<div style="text-align: center; color: black">
+											<h5 class="mb-1">#{sala.nazwa}</h5>
+											<h6 class="mb-1">Maksymalna pojemność: #{sala.maxcap}
+												osób</h6>
+											<h6 class="mb-1">Lokalizacja: #{sala.site.lokalizacja}</h6>
+											<br></br>
+										</div>
+									</div>
+								</h:commandLink>
+							</div>
+						</p:carousel>
+					</p:card>
+					<p:card style="height: 37%; margin-top: 20px">
+						<f:facet name="title" widgetVar="secondcardtitle">
+					        Najbliższe spotkania w tym tygodniu:
+					    </f:facet>
+						<p:schedule id="weekschedule" value="#{dashboardBB.myEventModel}"
+							widgetVar="myweekschedule" extender="window.ExtenderShowcase"
+							view="listWeek" allDaySlot="false" height="180px"
+							resizable="false" draggable="false" displayEventEnd="true"
+							showHeader="false" showWeekends="false" leftHeaderTemplate=""
+							rightHeaderTemplate="">
+						</p:schedule>
+					</p:card>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
